@@ -59,9 +59,10 @@
     header .logo svg{width:120px;}
   }
   @media(max-width:520px){
-    .navlinks{display:none;}
+    nav.wrap{flex-wrap:wrap;overflow:visible;row-gap:6px;padding-top:10px;padding-bottom:8px;}
     header .logo svg{width:140px;}
     .nav-cta{padding:8px 16px;font-size:.85rem;}
+    .navlinks{order:3;width:100%;justify-content:center;gap:22px;font-size:.85rem;padding-top:6px;border-top:1px solid rgba(43,36,32,.08);}
     .navlinks{gap:10px;font-size:.72rem;flex-shrink:0;white-space:nowrap;}
     .nav-cta{padding:6px 12px;font-size:.72rem;flex-shrink:0;white-space:nowrap;}
   }
@@ -120,6 +121,16 @@
   .card-destino h3{font-size:1.15rem;color:var(--neutral-900);margin-bottom:6px;}
   .card-destino p{font-size:.92rem;color:var(--neutral-700);margin:0 0 14px;}
   .card-link{color:var(--terracota);font-weight:700;font-size:.9rem;}
+  /* En celular, tarjetas de borde a borde como el hero */
+  @media(max-width:640px){
+    .destinos{padding-left:0;padding-right:0;}
+    .destinos .wrap{padding:0;}
+    .destinos .section-title{padding:0 24px;}
+    .grid-destinos{gap:20px;}
+    .card-destino{border-radius:0;border-left:0;border-right:0;}
+    .card-destino .card-img{height:230px;}
+    .card-destino .body{padding:20px 24px 24px;}
+  }
 
   /* PROPUESTAS (ventana de cada destino) */
   .propuesta{
