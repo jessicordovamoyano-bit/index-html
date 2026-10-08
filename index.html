@@ -45,6 +45,20 @@
   }
 }
 </script>
+
+<!-- Google Analytics 4: se carga después de la página para no frenarla -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-QJGSMQ4ZPJ');
+  window.addEventListener('load', function(){
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-QJGSMQ4ZPJ';
+    document.head.appendChild(s);
+  });
+</script>
 <link rel="preload" as="image" href="img/hero.jpg" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -817,6 +831,19 @@
 <a href="https://wa.me/5491161652573?text=Hola%20JC%20Travel%2C%20tengo%20una%20consulta." class="wa-float" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">💬</a>
 
 <script>
+  // Medición (Google Analytics)
+  function medir(evento, datos){ if (window.gtag) gtag('event', evento, datos); }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href*="wa.me"]');
+    if (!a) return;
+    var d = a.closest('dialog');
+    medir('generate_lead', {
+      metodo: 'whatsapp',
+      ubicacion: d ? 'propuesta' : (a.classList.contains('wa-float') ? 'boton_flotante' : 'portada'),
+      destino: d ? d.querySelector('h3').textContent.trim() : '(sin destino)'
+    });
+  });
+
   // Links internos: bajan a la sección sin sumar "#destinos" a la dirección
   document.querySelectorAll('a[href^="#"]').forEach(function(a){
     a.addEventListener('click', function(e){
@@ -859,6 +886,7 @@
       if (d && d.showModal) d.showModal();
       // Si después va al formulario, el destino ya aparece elegido
       if (d) selDestino.value = d.querySelector('h3').textContent.trim();
+      if (d) medir('ver_propuesta', {destino: d.querySelector('h3').textContent.trim()});
     });
   });
 
@@ -884,6 +912,7 @@
     var email = document.getElementById('fc-email').value.trim();
     if (viaje) lineas.push('Cómo imagino mi viaje: ' + viaje);
     if (email) lineas.push('Mi email: ' + email);
+    medir('generate_lead', {metodo: 'formulario', ubicacion: 'formulario', destino: selDestino.value});
     window.open('https://wa.me/5491161652573?text=' + encodeURIComponent(lineas.join('\n')), '_blank', 'noopener');
   });
   document.querySelectorAll('dialog.propuesta').forEach(function(d){
