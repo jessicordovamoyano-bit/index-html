@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jctravel.vercel.app/sitemap.xml
