@@ -20,7 +20,10 @@
     padding-bottom:env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box;}
-  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  /* Saltos del menú: suaves y sin tapar los títulos bajo el encabezado fijo */
+  html{scroll-behavior:smooth;scroll-padding-top:96px;}
+  @media(max-width:520px){html{scroll-padding-top:116px;}}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
   body{
     margin:0;
     font-family:'Montserrat',Arial,sans-serif;
@@ -50,6 +53,10 @@
   .logo-travel{color:var(--ambar);text-transform:uppercase;}
   .navlinks{display:flex;gap:28px;font-size:.95rem;}
   .navlinks a:hover{color:var(--terracota);}
+  header{transition:box-shadow .2s ease;}
+  header.con-sombra{box-shadow:0 4px 18px rgba(43,36,32,.12);}
+  .navlinks a{padding-bottom:3px;border-bottom:2px solid transparent;transition:color .15s ease,border-color .15s ease;}
+  .navlinks a.activo{color:#ff6b3d;border-bottom-color:#ff6b3d;}
   .nav-cta{
     background:#ff6b3d;color:#fff;padding:8px 18px;border-radius:30px;font-size:.9rem;font-weight:600;
   }
@@ -766,6 +773,21 @@
 <a href="https://wa.me/5491161652573?text=Hola%20JC%20Travel%2C%20tengo%20una%20consulta." class="wa-float" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">💬</a>
 
 <script>
+  // Encabezado: sombra al bajar y link de la sección activa
+  var header = document.querySelector('header');
+  function sombraHeader(){ header.classList.toggle('con-sombra', window.scrollY > 8); }
+  window.addEventListener('scroll', sombraHeader, {passive:true});
+  sombraHeader();
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entradas){
+      entradas.forEach(function(e){
+        if (e.isIntersecting) navLinks.forEach(function(a){ a.classList.toggle('activo', a.getAttribute('href') === '#' + e.target.id); });
+      });
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    ['destinos','nosotros','contacto'].forEach(function(id){ var s = document.getElementById(id); if (s) io.observe(s); });
+  }
+
   var selDestino = document.getElementById('fc-destino');
   // Llenar "Me interesa" con los títulos de las propuestas
   document.querySelectorAll('dialog.propuesta h3').forEach(function(h){
