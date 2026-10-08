@@ -46,18 +46,26 @@
 }
 </script>
 
-<!-- Google Analytics 4: se carga después de la página para no frenarla -->
+<!-- Google Analytics 4: se carga recién cuando la persona interactúa (o a los 5 s), para no frenar la carga -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){ dataLayer.push(arguments); }
   gtag('js', new Date());
   gtag('config', 'G-QJGSMQ4ZPJ');
-  window.addEventListener('load', function(){
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-QJGSMQ4ZPJ';
-    document.head.appendChild(s);
-  });
+  (function(){
+    var cargado = false, eventos = ['scroll', 'pointerdown', 'touchstart', 'keydown'];
+    function cargarGA(){
+      if (cargado) return;
+      cargado = true;
+      eventos.forEach(function(ev){ window.removeEventListener(ev, cargarGA); });
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-QJGSMQ4ZPJ';
+      document.head.appendChild(s);
+    }
+    eventos.forEach(function(ev){ window.addEventListener(ev, cargarGA, {passive:true, once:true}); });
+    window.addEventListener('load', function(){ setTimeout(cargarGA, 5000); });
+  })();
 </script>
 <link rel="preload" as="image" href="img/hero.jpg" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
