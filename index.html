@@ -773,6 +773,18 @@
 <a href="https://wa.me/5491161652573?text=Hola%20JC%20Travel%2C%20tengo%20una%20consulta." class="wa-float" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">💬</a>
 
 <script>
+  // Links internos: bajan a la sección sin sumar "#destinos" a la dirección
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id = a.getAttribute('href').slice(1);
+      var destino = id ? document.getElementById(id) : null;
+      if (id && !destino) return;
+      e.preventDefault();
+      if (destino) destino.scrollIntoView(); else window.scrollTo({top:0});
+    });
+  });
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+
   // Encabezado: sombra al bajar y link de la sección activa
   var header = document.querySelector('header');
   function sombraHeader(){ header.classList.toggle('con-sombra', window.scrollY > 8); }
